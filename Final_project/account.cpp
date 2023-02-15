@@ -1,6 +1,6 @@
 #include "account.h"
 
-account::account(int id, bank_account_name name, string currency, string bank_name, cards_type type, float additional_analytics, float remainder,string other)
+account::account(int id, string name, string currency, string bank_name, cards_type type, float additional_analytics, float remainder, date end_date)
 {
 	
 	this->id = id;
@@ -10,7 +10,7 @@ account::account(int id, bank_account_name name, string currency, string bank_na
 	this->type = type;
 	this->additional_analytics = additional_analytics;
 	this->remainder = remainder;
-	this->end_date = other;
+	this->end_date = end_date;
 }
 
 
@@ -66,12 +66,12 @@ void account::set_id(int id)
 	this -> id = id;
 }
 
-bank_account_name account::get_name()
+string account::get_name()
 {
 	return name;
 }
 
-void account::set_name(bank_account_name name)
+void account::set_name(string name)
 {
 	this->name = name;
 }
@@ -126,12 +126,12 @@ void account::set_remainder(float remainder)
 	this->remainder = remainder;
 }
 
-string account::get_other()
+date account::get_end_date()
 {
 	return end_date;
 }
 
-void account::set_other(string end_date)
+void account::set_end_date(date end_date)
 {
 	this->end_date = end_date;
 }
@@ -155,86 +155,100 @@ float account::simple_percent()
 
 float account::monthly_precent()
 {
-	
-	
 	remainder=remainder * ((float (additional_analytics)/100) / 12);
 	return remainder;
 }
 
-string account::show_cards_type(cards_type type)
+vector<transaction> account::get_tr_by_period(date start_p, date end_p)
 {
-	if (current == type)
+	vector<transaction> result;
+
+	for (int i = 0; i < all_transaction.size(); i++)
+	{
+		if (all_transaction[i].get_date() >= start_p && all_transaction[i].get_date() <= end_p)
+		{
+			result.push_back(all_transaction[i]);
+		}
+	}
+
+	return result;
+}
+
+
+
+string account::show_cards_type(const cards_type type) const 
+{
+	if (type == current)
 	{
 		return "current";
 	}
-	else if (card == type)
-	{
+	else if (type == card) {
 		return "card";
 	}
-	else if (deposit == type)
-	{
+	else if (type == deposit) {
 		return"deposit";
 	}
-	else if (credit == type)
-	{
+	else if (type == credit) {
 		return "credit";
 	}
-	else if (other == type)
-	{
-		return "other";
-	}
+
+	return "other";
+
 }
-string account::show_bank_account_name(bank_account_name type)
-{
-	if (current_account == type)
-	{
-		return "current_account";
-	}
-	else if (card_account== type)
-	{
-		return "card_account";
-	}
-	else if (deposit_account == type)
-	{
-		return "deposit_account";
-	}
-	else if (credit_account == type)
-	{
-		return "credit_account";
-	}
-	else if (other_account == type)
-	{
-		return "other_account";
-	}
-}
-ostream& operator<<(ostream& out, account& name)
+//string account::show_bank_account_name(bank_account_name type)
+//{
+//	if (current_account == type)
+//	{
+//		return "current_account";
+//	}
+//	else if (card_account== type)
+//	{
+//		return "card_account";
+//	}
+//	else if (deposit_account == type)
+//	{
+//		return "deposit_account";
+//	}
+//	else if (credit_account == type)
+//	{
+//		return "credit_account";
+//	}
+//	else if (other_account == type)
+//	{
+//		return "other_account";
+//	}
+//}
+ostream& operator<<(ostream& out,const account& name)
 {
 
 	return out << "Id: " << name.id << " \nBank account name: " << name.name << " \nCurrency: " << name.currency << "\nBank name: "
-		<< name.bank_name << "\nType card: " << name.show_cards_type(name.type) << "\nAnalytics: " << name.additional_analytics << "\nRemainder: " << name.remainder << "\nApplying other information: " << name.end_date << endl;
+		<< name.bank_name << "\nType card: " << name.show_cards_type(name.type) << "\nAnalytics: " << name.additional_analytics<<"%" << "\nRemainder: " << name.remainder << "\nApplying other information: " << name.end_date << endl;
 	
 }
-ostream& operator<<(ostream& out,  cards_type& type)
-{
-	if (current == type)
-	{
-		out << "current" << endl;;
-	}
-	else if (card == type)
-	{
-		out << "card" << endl;
-	}
-	else if (deposit == type)
-	{
-		out << "deposit" << endl;
-	}
-	else if (credit == type)
-	{
-		out << "credit" << endl;
-	}
-	else if (other == type)
-	{
-		out << "other" << endl;
-	}
-	return (out);
-}
+//ostream& operator<<(ostream& out,  cards_type& type)
+//{
+//	if (current == type)
+//	{
+//		out << "current" << endl;;
+//	}
+//	else if (card == type)
+//	{
+//		out << "card" << endl;
+//	}
+//	else if (deposit == type)
+//	{
+//		out << "deposit" << endl;
+//	}
+//	else if (credit == type)
+//	{
+//		out << "credit" << endl;
+//	}
+//	else if (other == type)
+//	{
+//		out << "other" << endl;
+//	}
+//	return (out);
+//}
+
+
+cards_type account::getCard() const  { return this->type; } 
