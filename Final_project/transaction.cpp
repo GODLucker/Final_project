@@ -1,5 +1,5 @@
 #include "transaction.h"
-
+#include"account.h"
 transaction::transaction()
 {
 	money = 0;
@@ -28,8 +28,17 @@ date transaction::get_date()
 {
 	return date_tr;
 }
-
+string transaction::show_cards_type(const transaction_type type) const
+{
+	if (type == spending)
+	{
+		return "spending";
+	}
+		return "replenishment";
+	
+	
+}
 ostream& operator<<(ostream& out, const transaction& tr)
 {
-	return out << "\nMoney: " << tr.money << " type: " << tr.type << " \nData_tr: " << tr.date_tr << endl;
+	return out << "\nMoney: " << tr.money << " type: " << tr.show_cards_type(tr.type) << " \nData_tr: " << tr.date_tr << endl;
 }

@@ -56,7 +56,7 @@ account& account::operator=(const account& other)
 
 
 
-int account::get_id()
+int account::get_id()const
 {
 	return id;
 }
@@ -106,17 +106,17 @@ void account::set_type(cards_type type)
 	this->type = type;
 }
 
-int account::get_additional_analytics()
+float account::get_additional_analytics()
 {
 	return additional_analytics;
 }
 
-void account::set_additional_analytics(int additional_analytics)
+void account::set_additional_analytics(float additional_analytics)
 {
 	this->additional_analytics = additional_analytics;
 }
 
-float account::get_remainder()
+float account::get_remainder()const
 {
 	return remainder;
 }
@@ -148,7 +148,7 @@ float account::income(float income_money)
 	return remainder=remainder+income_money;
 }
 
-float account::simple_percent()
+float account::simple_percent()const
 {
 	return ((remainder*additional_analytics*365)/365)/100;
 }
@@ -175,8 +175,7 @@ vector<transaction> account::get_tr_by_period(date start_p, date end_p)
 }
 
 
-
-string account::show_cards_type(const cards_type type) const 
+ string account::show_cards_type(const cards_type type) const 
 {
 	if (type == current)
 	{
@@ -222,7 +221,7 @@ ostream& operator<<(ostream& out,const account& name)
 {
 
 	return out << "Id: " << name.id << " \nBank account name: " << name.name << " \nCurrency: " << name.currency << "\nBank name: "
-		<< name.bank_name << "\nType card: " << name.show_cards_type(name.type) << "\nAnalytics: " << name.additional_analytics<<"%" << "\nRemainder: " << name.remainder << "\nApplying other information: " << name.end_date << endl;
+		<< name.bank_name << "\nType card: " << name.show_cards_type(name.type) << "\nAnalytics: " << name.additional_analytics<<"%"<<" ~+"<<name.simple_percent()<<name.currency << "\nRemainder: " << name.remainder << "\nApplying other information: " << name.end_date << endl;
 	
 }
 //ostream& operator<<(ostream& out,  cards_type& type)
