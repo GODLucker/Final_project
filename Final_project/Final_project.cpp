@@ -8,10 +8,10 @@ int main()
 {
 	int id = 1;
 	int menu;
-	date credit_start(12, 1, 2021);
 	date credit_end(1, 4, 2021);
-	account client1(2, "credit account", "UAH", "Monobank", credit, 16, 3000, credit_end);
-	account client2(1, "deposit account", "UAH", "Monobank", deposit, 16, 6000, credit_end);
+	date deposit_end;
+	account client1(0, "credit account", "UAH", "Monobank", credit, 16, 3000, credit_end);
+	account client2(0, "deposit account", "UAH", "Monobank", deposit, 16, 6000, credit_end);
 	std::vector<account> accountList;
 
 	accountList.push_back(client1);
@@ -34,28 +34,89 @@ int main()
 		}
 		case 1:
 		{
-			int  type_card;
+			int  type_card, day, month, year;;
 			float first_deposit, year_percent;
 			string bank_currency, bank_name, account_name;
-
+			date deposit_end(0,0,0);
+			date credit_end(0,0,0);
 			cout << "\tYou choose create account!\n";
 
 			cout << "Enter account name: ";
 			cin >> account_name;
 			cout << "Enter avalible currency UAH,USD,EUR: \n";
 			cin >> bank_currency;
+			while(true)
+			{ 
+				if (bank_currency != "UAH" && bank_currency != "USD" && bank_currency != "EUR")
+				{
+					cout << "Only capital letters only!\n Example: Q W E R T..\n";
+					cout << "Enter avalible currency UAH,USD,EUR: ";
+					cin >> bank_currency;
+					
+				}
+				else
+					break;
+			}
 			cout << "Enter name of banking: " << endl;
 			cin >> bank_name;
 			cout << "Enter account card type\n ";
 			cout << "(0-Current account,1-card account,2-deposit account,3-credit account,4-other account) : ";
 			cin >> type_card;
-			cout << "Enter year precent: \n";
-			cin >> year_percent;
+			if (type_card == 2 )
+			{
+				cout << "Enter year precent: \n";
+				cin >> year_percent;
+				cout << "Enter of date deposit ending: ";
+				cout << "Enter data: \nDay: ,Month: ,Year: \n";
+				cin >> day >> month >> year;
+				date deposit_end(day, month, year);
+				cout << "Enter first ammount to deposit on your new account\n";
+				cin >> first_deposit;
+				
+			}
+			else if (type_card == 3)
+			{
+				cout << "Enter year precent: \n";
+				cin >> year_percent;
+				cout << "Enter of date credit ending: ";
+				cout << "Enter data: \nDay: ,Month: ,Year: \n";
+				cin >> day >> month >> year;
+				date credit_end(day, month, year);
+				cout << "Enter first ammount to deposit on your new account\n";
+				cin >> first_deposit;
+			}
+			else
+			{ 
 			cout << "Enter first ammount to deposit on your new account\n";
 			cin >> first_deposit;
-			account newaccount(id++, account_name, bank_currency, bank_name, cards_type(type_card), year_percent, first_deposit, credit_end);
-			accountList.push_back(newaccount);
+			}
+			while(true)
+			{ 
+			if (type_card != 2 && type_card != 3 && first_deposit >= 0)
+			{
 
+				account newaccount(id++, account_name, bank_currency, bank_name, cards_type(type_card),first_deposit);
+				accountList.push_back(newaccount);
+				break;
+			}
+			else if (type_card == 2 && first_deposit>=0)
+			{
+				account newaccount(id++, account_name, bank_currency, bank_name, cards_type(type_card), year_percent, first_deposit, deposit_end);
+				accountList.push_back(newaccount);
+				break;
+			}
+			else if (type_card == 3)
+			{
+				account newaccount(id++, account_name, bank_currency, bank_name, cards_type(type_card), year_percent, first_deposit, credit_end);
+				accountList.push_back(newaccount);
+				break;
+			}
+			else
+				cout << "\n\tOnly credit account could have minus balance!\n";
+			cout << "Enter first ammount to deposit on your new account\n";
+			cin >> first_deposit;
+			
+			}
 			break;
 
 

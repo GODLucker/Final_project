@@ -40,12 +40,13 @@ private:
 	
 public:
 	account(int id, string name, string currency, string bank_name, cards_type type, float additional_analytics, float remainder, date end_date);
-	
+	account(int id, string name, string currency, string bank_name, cards_type type,  float remainder);
 	account(const account& other);
 	account(const account&& other);
 	account& operator=(const account& other);
 
 	friend ostream& operator<<(ostream& out,const account& name); //перевантаження для об'єкту
+
 	//friend ostream& operator<<(ostream& out, cards_type& type); //перевантаження для переліку(enum) типів карт
 	vector<transaction>& get_tr() {
 		return all_transaction;
@@ -83,9 +84,7 @@ public:
 	float income(float income_money);
 	
 	float simple_percent()const;
-	float monthly_precent();
-
-
+	
 	vector<transaction> get_tr_by_period(date start_p, date end_p);
 
 };
