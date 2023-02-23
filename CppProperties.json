@@ -12,6 +12,7 @@
       "defines": [
         "WIN32",
         "_DEBUG",
+        "_CRT_SECURE_NO_WARNINGS",
         "UNICODE",
         "_UNICODE"
       ],

@@ -15,15 +15,7 @@ enum cards_type
 	credit,
 	other
 };
-//enum bank_account_name
-//{
-//	current_account,
-//	card_account,
-//	deposit_account,
-//	credit_account,
-//	other_account
-//
-//};
+
 class account
 {
 private:
@@ -34,12 +26,13 @@ private:
 	cards_type type; //тип картки
 	float additional_analytics;//відсоток, який нараховується на залишок
 	float remainder;//залишок
+	date date_create;
 	date end_date;// має бути прогнозована дата закінчення депозита або кредита.
 	vector<transaction> all_transaction; //усі транзакції за період
 
 	
 public:
-	account(int id, string name, string currency, string bank_name, cards_type type, float additional_analytics, float remainder, date end_date);
+	account(int id, string name, string currency, string bank_name, cards_type type, float additional_analytics, float remainder, date date_create , date end_date);
 	account(int id, string name, string currency, string bank_name, cards_type type,  float remainder);
 	account(const account& other);
 	account(const account&& other);
@@ -67,14 +60,15 @@ public:
 	cards_type get_type();
 	void set_type(cards_type type);
 
-	cards_type getCard() const;
+	cards_type get_Card() const;
+
 	float get_additional_analytics();
 	void set_additional_analytics(float additional_analytics);
 
 	float get_remainder()const;
 	void set_remainder(float remainder);
 
-	date get_end_date();
+	date get_end_date()const;
 	void set_end_date(date end_date);
 
 	 string show_cards_type(const cards_type type) const;
@@ -83,7 +77,7 @@ public:
 	float spending(float spending_money);
 	float income(float income_money);
 	
-	float simple_percent()const;
+	float simple_percent(bool isLongYear)const;
 	
 	vector<transaction> get_tr_by_period(date start_p, date end_p);
 

@@ -1,18 +1,29 @@
 ﻿// Final_project.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include<ctime>
 #include "account.h"
+#include <iomanip>
+#include <ctime>
+
+
+
+
 int main()
 {
 	int id = 1;
 	int menu;
+	std::time_t t = std::time(NULL);
+	std::tm tm = *std::localtime(&t);
+	date date_create(tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+	std::vector<account> accountList;
+	//FOR TEST 
 	date credit_end(1, 4, 2021);
 	date deposit_end;
-	account client1(0, "credit account", "UAH", "Monobank", credit, 16, 3000, credit_end);
-	account client2(0, "deposit account", "UAH", "Monobank", deposit, 16, 6000, credit_end);
-	std::vector<account> accountList;
+	account client1(0, "credit account", "UAH", "Monobank", credit, 16, 3000,date_create, credit_end);
+	account client2(1, "deposit account", "UAH", "Monobank", deposit, 16, 6000, date_create,credit_end);
+	
 
 	accountList.push_back(client1);
 	accountList.push_back(client2);
@@ -66,6 +77,7 @@ int main()
 			{
 				cout << "Enter year precent: \n";
 				cin >> year_percent;
+
 				cout << "Enter of date deposit ending: ";
 				cout << "Enter data: \nDay: ,Month: ,Year: \n";
 				cin >> day >> month >> year;
@@ -101,13 +113,13 @@ int main()
 			}
 			else if (type_card == 2 && first_deposit>=0)
 			{
-				account newaccount(id++, account_name, bank_currency, bank_name, cards_type(type_card), year_percent, first_deposit, deposit_end);
+				account newaccount(id++, account_name, bank_currency, bank_name, cards_type(type_card), year_percent, first_deposit, date_create,deposit_end);
 				accountList.push_back(newaccount);
 				break;
 			}
 			else if (type_card == 3)
 			{
-				account newaccount(id++, account_name, bank_currency, bank_name, cards_type(type_card), year_percent, first_deposit, credit_end);
+				account newaccount(id++, account_name, bank_currency, bank_name, cards_type(type_card), year_percent, first_deposit, date_create, credit_end);
 				accountList.push_back(newaccount);
 				break;
 			}
@@ -126,12 +138,12 @@ int main()
 			cout << "You choose avalible card info: \n";
 
 			for (const auto& account : accountList) {
-				cout << "\nCard ID:" << account.get_id() << " " << account.show_cards_type(account.getCard()) << endl;
+				cout << "\nCard ID:" << account.get_id() << " " << account.show_cards_type(account.get_Card()) << endl;
 			}
 			break;
 
 		}
-		case 3:
+		case 3://Spending money
 		{
 			cout << "You choose show info from your avalible cards: \n";
 			for (const auto& accountlist : accountList)
@@ -149,7 +161,7 @@ int main()
 			cout << "Your avalible account: \n";
 			for (const auto& account : accountList)
 			{
-				cout << "\nCard ID:" << account.get_id() << " Type card: " << account.show_cards_type(account.getCard()) << " Money: " << account.get_remainder() << endl;
+				cout << "\nCard ID:" << account.get_id() << " Type card: " << account.show_cards_type(account.get_Card()) << " Money: " << account.get_remainder() << endl;
 			}
 			cout << "Enter ID: ";
 			cin >> id;
@@ -167,11 +179,11 @@ int main()
 					accountList[i].get_tr().push_back(tr);
 					break;
 				}
-				/*else
+				else
 				{
 					cout << "Do not have entered ID in list\nTry again!\n";
-
-				}*/
+					break;
+				}
 
 			}
 			break;
@@ -186,7 +198,7 @@ int main()
 			cout << "Your avalible account: \n";
 			for (const auto& account : accountList)
 			{
-				cout << "\nCard ID:" << account.get_id() << " Type card: " << account.show_cards_type(account.getCard()) << " Money: " << account.get_remainder() << endl;
+				cout << "\nCard ID:" << account.get_id() << " Type card: " << account.show_cards_type(account.get_Card()) << " Money: " << account.get_remainder() << endl;
 			}
 			cin >> id;
 			for (auto i = 0; i < accountList.size(); i++)
@@ -203,10 +215,11 @@ int main()
 					accountList[i].get_tr().push_back(tr);
 					break;
 				}
-				/*else
+				else
 				{
 					cout << "Do not have entered ID in list\nTry again!\n";
-				}*/
+					break;
+				}
 			}
 			break;
 		}
@@ -232,7 +245,7 @@ int main()
 			}
 			break;
 		}
-		case 7:
+		/*case 7:
 		{
 			int  day, month, year;
 
@@ -252,7 +265,7 @@ int main()
 			}
 
 			break;
-		}
+		}*/
 		default:
 		{
 			cout << "Unknown command :(";
