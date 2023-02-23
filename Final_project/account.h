@@ -73,12 +73,14 @@ public:
 
 	 string show_cards_type(const cards_type type) const;
 	 /*string show_bank_account_name(string type);*/
-
+	 
 	float spending(float spending_money);
 	float income(float income_money);
 	
 	float simple_percent(bool isLongYear)const;
 	
+
+	bool balance_checker();
 	vector<transaction> get_tr_by_period(date start_p, date end_p);
 
 };

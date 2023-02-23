@@ -151,9 +151,15 @@ void account::set_end_date(date end_date)
 
 float account::spending(float spending_money)
 {
-	
+	if(balance_checker())
+	{ 
 	return remainder = remainder - spending_money;
-
+	}
+	else
+	{
+		 remainder = abs(remainder - (spending_money + (spending_money * 0.5)));
+		 return remainder = remainder * (-1);
+	}
 }
 
 float account::income(float income_money)
@@ -165,11 +171,12 @@ float account::simple_percent(bool isLongYear)const
 {
 	if(isLongYear)
 	{ 
+		
 		return abs(((remainder * additional_analytics * 365) / 365) / 100);
 	}
 	else
 	{
-	return	abs(((remainder * additional_analytics * 366) / 366) / 100);
+		return	abs(((remainder * additional_analytics * 366) / 366) / 100);
 	}
 }
 
@@ -214,7 +221,14 @@ vector<transaction> account::get_tr_by_period(date start_p, date end_p)
 	return "other";
 
 }
-
+ bool account::balance_checker()
+ {
+	
+	 if (get_remainder() >= 0)
+		 return true;
+	 else
+		 return false;
+ }
 ostream& operator<<(ostream& out,const account& name)
 {
 

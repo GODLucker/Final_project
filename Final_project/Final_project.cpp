@@ -21,8 +21,8 @@ int main()
 	//FOR TEST 
 	date credit_end(1, 4, 2021);
 	date deposit_end;
-	account client1(0, "credit account", "UAH", "Monobank", credit, 16, 3000,date_create, credit_end);
-	account client2(1, "deposit account", "UAH", "Monobank", deposit, 16, 6000, date_create,credit_end);
+	account client1(0, "credit account", "UAH", "Monobank", credit, 16, -3000,date_create, credit_end);
+	account client2(2, "deposit account", "UAH", "Monobank", deposit, 16, 6000, date_create,credit_end);
 	
 
 	accountList.push_back(client1);
@@ -169,9 +169,17 @@ int main()
 			{
 				if (accountList[i].get_id() == id)
 				{
+					cout << "\t\nAttention, if you have minus balance on credit card,you will pay 5% each transaction!\n";
 					cout << "Enter the sum of spending: ";
 					cin >> spend_money;
+					if(accountList[i].balance_checker())
+					{ 
 					accountList[i].spending(spend_money);
+					}
+					else
+					{
+						accountList[i].spending(spend_money);
+					}
 					cout << "Enter data of spending: \nDay: ,Month: ,Year: \n";
 					cin >> day >> month >> year;
 					date date_tr(day, month, year);
