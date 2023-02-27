@@ -6,10 +6,13 @@
 #include "account.h"
 #include <iomanip>
 #include <ctime>
-
-
-
-
+#include<conio.h>
+#include <string>
+#include <sstream>
+#include<Windows.h>
+bool isUnsignedNumber(const std::string& str);
+bool isUnsignedNumber(int number);
+bool date_cheker(int day, int month, int year);//прототип
 int main()
 {
 	int id = 1;
@@ -21,15 +24,15 @@ int main()
 	//FOR TEST 
 	date credit_end(1, 4, 2021);
 	date deposit_end;
-	account client1(0, "credit account", "UAH", "Monobank", credit, 16, -3000,date_create, credit_end);
-	account client2(2, "deposit account", "UAH", "Monobank", deposit, 16, 6000, date_create,credit_end);
+	account client1(0, "credit account", "UAH", "Monobank", credit, 16, -3000,date_create, credit_end);//test
+	account client2(2, "deposit account", "UAH", "Monobank", deposit, 16, 6000, date_create,credit_end);//test
 	
 
 	accountList.push_back(client1);
 	accountList.push_back(client2);
 
-
-	while (true)
+	
+	while (!_kbhit())
 	{
 		cout << "-----------BANK ACCOUTN-----------\n";
 		cout << "0 - Exit\n1 - Create account\n2 - Show avalibale card\n3 - Show info from avalible cards\n";
@@ -42,11 +45,12 @@ int main()
 			cout << "See u\t\n";
 			return 0;
 			break;
+			
 		}
 		case 1:
 		{
-			int  type_card, day, month, year;;
-			float first_deposit, year_percent;
+			int  type_card=0, day=0, month=0, year=0;;
+			float first_deposit=0, year_percent=0;
 			string bank_currency, bank_name, account_name;
 			date deposit_end(0,0,0);
 			date credit_end(0,0,0);
@@ -73,27 +77,36 @@ int main()
 			cout << "Enter account card type\n ";
 			cout << "(0-Current account,1-card account,2-deposit account,3-credit account,4-other account) : ";
 			cin >> type_card;
-			if (type_card == 2 )
+			if (type_card == 2 )//сторюємо депозитну картку
 			{
 				cout << "Enter year precent: \n";
 				cin >> year_percent;
 
-				cout << "Enter of date deposit ending: ";
+				cout << "Enter of date deposit ending.\n";
 				cout << "Enter data: \nDay: ,Month: ,Year: \n";
 				cin >> day >> month >> year;
+				if(date_cheker(day,month,year))// перевірка на коректність дати 
+				{ 
 				date deposit_end(day, month, year);
+				}
+				else { cout << "\nWrong date! Try again!\n"; break; }
 				cout << "Enter first ammount to deposit on your new account\n";
 				cin >> first_deposit;
 				
 			}
-			else if (type_card == 3)
+			else if (type_card == 3) //сторюємо кредитну картку
 			{
 				cout << "Enter year precent: \n";
 				cin >> year_percent;
 				cout << "Enter of date credit ending: ";
 				cout << "Enter data: \nDay: ,Month: ,Year: \n";
 				cin >> day >> month >> year;
-				date credit_end(day, month, year);
+				if (date_cheker(day, month, year))// перевірка на коректність дати 
+				{
+					date credit_end(day, month, year);
+				}
+				else { cout << "\nWrong date! Try again!\n"; break; }
+				
 				cout << "Enter first ammount to deposit on your new account\n";
 				cin >> first_deposit;
 			}
@@ -143,7 +156,7 @@ int main()
 			break;
 
 		}
-		case 3://Spending money
+		case 3:
 		{
 			cout << "You choose show info from your avalible cards: \n";
 			for (const auto& accountlist : accountList)
@@ -152,7 +165,7 @@ int main()
 			}
 			break;
 		}
-		case 4:
+		case 4://Spending money
 		{
 			int id, day, month, year;
 			float spend_money;
@@ -182,9 +195,14 @@ int main()
 					}
 					cout << "Enter data of spending: \nDay: ,Month: ,Year: \n";
 					cin >> day >> month >> year;
-					date date_tr(day, month, year);
+					if (date_cheker(day, month, year))// перевірка на коректність дати 
+					{
+						date date_tr(day, month, year);
 					transaction tr(spend_money, spending, date_tr);
 					accountList[i].get_tr().push_back(tr);
+					}
+					else { cout << "\nWrong date! Try again!\n"; break; }
+					
 					break;
 				}
 				else
@@ -218,9 +236,17 @@ int main()
 					accountList[i].income(replenishment_money);
 					cout << "Enter data of spending: \nDay: ,Month: ,Year: \n";
 					cin >> day >> month >> year;
-					date date_tr(day, month, year);
-					transaction tr(accountList[i].get_remainder(), replenishment, date_tr);
-					accountList[i].get_tr().push_back(tr);
+					if (date_cheker(day, month, year))// перевірка на коректність дати 
+					{
+						date date_tr(day, month, year);
+						transaction tr(replenishment_money, replenishment, date_tr);
+						accountList[i].get_tr().push_back(tr);
+					}
+					else 
+					{ 
+						cout << "\nWrong date! Try again!\n";
+						break;
+					}			
 					break;
 				}
 				else
@@ -234,46 +260,80 @@ int main()
 		case 6:
 		{
 			int  day, month, year;
-
+			date first_date, last_date;
 			cout << "You choose report about transaction.\n";
-			cout << "Enter first date: \nDay,month.year: ";
+			cout << "Enter first date: \nDay,month,year: ";
 			cin >> day >> month >> year;
-			date first_date(day, month, year);
-			cout << "Enter last date: \nDay,month.year: ";
-			cin >> day >> month >> year;
-			date last_date(day, month, year);
-			for (auto i = 0; i < accountList.size(); i++)
+			if (date_cheker(day, month, year))// перевірка на коректність дати 
 			{
-				vector<transaction> resList = accountList[i].get_tr_by_period(first_date, last_date);
-
-				for (const auto& res : resList)
+				date first_date(day, month, year);
+				
+				cout << "Enter last date: \nDay,month.year: ";
+			
+				cin >> day >> month >> year;
+				if (date_cheker(day, month, year))// перевірка на коректність дати 
 				{
-					cout << res;
+					date last_date(day, month, year);
+					for (auto i = 0; i < accountList.size(); i++)
+					{
+					vector<transaction> resList = accountList[i].get_tr_by_period(first_date, last_date);
+
+					for (const auto& res : resList)
+					{
+						cout << res;
+					}
+					}
+				}else
+				{ 
+					cout << "\nWrong date! Try again!\n"; break;
 				}
 			}
+			else 
+			{ 
+				cout << "\nWrong date! Try again!\n";
+				break; 
+			}
+			
+			
 			break;
 		}
-		/*case 7:
+		case 7:
 		{
 			int  day, month, year;
-
+			
 			cout << "You choose report about transaction.\n";
 			cout << "Enter first date: \nDay,month.year: ";
 			cin >> day >> month >> year;
+				if (isUnsignedNumber(day) && isUnsignedNumber(month) && isUnsignedNumber(year))// Работает проверка на ввод только чисел по модулю
+				{
+			
+				}else 
+				{ 
+				cout << "\nWrong date! Try again!\n";
+				break; 
+				}
 			date first_date(day, month, year);
 			cout << "Enter last date: \nDay,month.year: ";
 			cin >> day >> month >> year;
-			date last_date(day, month, year);
+				if(isUnsignedNumber(day)&& isUnsignedNumber(month)&& isUnsignedNumber(year))
+				{ 
+					if (date_cheker(day, month, year))
+					{
+					}
+					else { cout << "\nWrong date! Try again!\n"; break; }
+					date last_date(day, month, year);
+					vector<transaction> resList = client1.get_tr_by_period(first_date, last_date);
 
-			vector<transaction> resList = client1.get_tr_by_period(first_date, last_date);
-
-			for (const auto& res : resList)
-			{
-				cout << res;
-			}
-
-			break;
-		}*/
+					for (const auto& res : resList)
+					{
+						cout << res;
+					}
+				}
+				else 
+				{ cout << "\nWrong date! Try again!\n"; break; }
+			
+		break;
+		}
 		default:
 		{
 			cout << "Unknown command :(";
@@ -284,6 +344,59 @@ int main()
 	}
 	return 0;
 }
+bool date_cheker(int day, int month, int year)
+{
+	if (year >= 1970) {}
 
+	else return false;
 
+	if (month >= 1 && month <= 12) {}
+	else return false;
 
+	if (month == 2)
+	{
+		if (year % 4 == 0)
+		{
+			if (day >= 1 && day <= 29) day = day;
+			else return false;
+		}
+		else
+		{
+			if (day >= 1 && day <= 28) day = day;
+			else return false;
+		}
+	}
+	else if (month == 4 || month == 6 || month == 9 || month == 11)
+	{
+		if (day >= 1 && day <= 30) day = day;
+		else return false;
+	}
+	else
+	{
+		if (day >= 1 && day <= 31)
+		{
+			day = day;
+		}
+		else return false;
+	}
+
+};
+bool isUnsignedNumber(const std::string& str) {
+	// Проверяем, что введенная строка содержит только цифры
+	if (str.find_first_not_of("0123456789") == std::string::npos) {
+		// Преобразуем строку в беззнаковое число
+		std::stringstream ss(str);
+		int number;
+		ss >> number;
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool isUnsignedNumber(int number) {
+	std::stringstream ss;
+	ss << number;
+	return isUnsignedNumber(ss.str());
+}

@@ -44,7 +44,7 @@ void date::set_year(int year)
 	this->year = year;
 }
 
-bool date::isLongYear()
+ bool date::isLongYear()
 {
 	
 	return (year % 4 == 0 || (year % 100 == 0 && year % 400));

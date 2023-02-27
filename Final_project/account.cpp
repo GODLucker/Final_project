@@ -179,13 +179,11 @@ float account::simple_percent(bool isLongYear)const
 		return	abs(((remainder * additional_analytics * 366) / 366) / 100);
 	}
 }
-
 //float account::monthly_precent()
 //{
 //	remainder=remainder * ((float (additional_analytics)/100) / 12);
 //	return remainder;
 //}
-
 vector<transaction> account::get_tr_by_period(date start_p, date end_p)
 {
 	vector<transaction> result;
@@ -200,8 +198,6 @@ vector<transaction> account::get_tr_by_period(date start_p, date end_p)
 
 	return result;
 }
-
-
  string account::show_cards_type(const cards_type type) const 
 {
 	if (type == current)
@@ -239,5 +235,11 @@ ostream& operator<<(ostream& out,const account& name)
 	out << "Data of end credit or deposit: " << name.end_date << endl;
 	return out;
 }
-
-cards_type account::get_Card() const  { return this->type; } 
+vector<transaction>account::get_tr()
+{
+	return all_transaction;
+}
+cards_type account::get_Card() const 
+{
+	return this->type;
+} 

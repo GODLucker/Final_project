@@ -21,7 +21,7 @@ public:
 
 	int get_year();
 	void set_year(int year);
-	bool isLongYear();
+	virtual bool isLongYear();
 	
 	friend ostream& operator<<(ostream& out, const date& date);
 	friend bool operator >=(const date& d1, const date& d2);
