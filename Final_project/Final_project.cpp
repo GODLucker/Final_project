@@ -85,7 +85,7 @@ int main()
 				cout << "Enter of date deposit ending.\n";
 				cout << "Enter data: \nDay: ,Month: ,Year: \n";
 				cin >> day >> month >> year;
-				if(date_cheker(day,month,year))// перевірка на коректність дати 
+				if(date_cheker(day,month,year) && isUnsignedNumber(day) && isUnsignedNumber(month) && isUnsignedNumber(year))// перевірка на коректність дати 
 				{ 
 				date deposit_end(day, month, year);
 				}
@@ -101,7 +101,7 @@ int main()
 				cout << "Enter of date credit ending: ";
 				cout << "Enter data: \nDay: ,Month: ,Year: \n";
 				cin >> day >> month >> year;
-				if (date_cheker(day, month, year))// перевірка на коректність дати 
+				if (date_cheker(day, month, year) && isUnsignedNumber(day) && isUnsignedNumber(month) && isUnsignedNumber(year))// перевірка на коректність дати 
 				{
 					date credit_end(day, month, year);
 				}
@@ -195,7 +195,7 @@ int main()
 					}
 					cout << "Enter data of spending: \nDay: ,Month: ,Year: \n";
 					cin >> day >> month >> year;
-					if (date_cheker(day, month, year))// перевірка на коректність дати 
+					if (date_cheker(day, month, year) && isUnsignedNumber(day) && isUnsignedNumber(month) && isUnsignedNumber(year))// перевірка на коректність дати 
 					{
 						date date_tr(day, month, year);
 					transaction tr(spend_money, spending, date_tr);
@@ -236,7 +236,7 @@ int main()
 					accountList[i].income(replenishment_money);
 					cout << "Enter data of spending: \nDay: ,Month: ,Year: \n";
 					cin >> day >> month >> year;
-					if (date_cheker(day, month, year))// перевірка на коректність дати 
+					if (date_cheker(day, month, year) && isUnsignedNumber(day) && isUnsignedNumber(month) && isUnsignedNumber(year))// перевірка на коректність дати 
 					{
 						date date_tr(day, month, year);
 						transaction tr(replenishment_money, replenishment, date_tr);
@@ -264,14 +264,14 @@ int main()
 			cout << "You choose report about transaction.\n";
 			cout << "Enter first date: \nDay,month,year: ";
 			cin >> day >> month >> year;
-			if (date_cheker(day, month, year))// перевірка на коректність дати 
+			if (date_cheker(day, month, year) && isUnsignedNumber(day) && isUnsignedNumber(month) && isUnsignedNumber(year))// перевірка на коректність дати 
 			{
 				date first_date(day, month, year);
 				
 				cout << "Enter last date: \nDay,month.year: ";
 			
 				cin >> day >> month >> year;
-				if (date_cheker(day, month, year))// перевірка на коректність дати 
+				if (date_cheker(day, month, year) && isUnsignedNumber(day) && isUnsignedNumber(month) && isUnsignedNumber(year))// перевірка на коректність дати 
 				{
 					date last_date(day, month, year);
 					for (auto i = 0; i < accountList.size(); i++)
@@ -297,43 +297,43 @@ int main()
 			
 			break;
 		}
-		case 7:
-		{
-			int  day, month, year;
-			
-			cout << "You choose report about transaction.\n";
-			cout << "Enter first date: \nDay,month.year: ";
-			cin >> day >> month >> year;
-				if (isUnsignedNumber(day) && isUnsignedNumber(month) && isUnsignedNumber(year))// Работает проверка на ввод только чисел по модулю
-				{
-			
-				}else 
-				{ 
-				cout << "\nWrong date! Try again!\n";
-				break; 
-				}
-			date first_date(day, month, year);
-			cout << "Enter last date: \nDay,month.year: ";
-			cin >> day >> month >> year;
-				if(isUnsignedNumber(day)&& isUnsignedNumber(month)&& isUnsignedNumber(year))
-				{ 
-					if (date_cheker(day, month, year))
-					{
-					}
-					else { cout << "\nWrong date! Try again!\n"; break; }
-					date last_date(day, month, year);
-					vector<transaction> resList = client1.get_tr_by_period(first_date, last_date);
+		//case 7:
+		//{
+		//	int  day, month, year;
+		//	
+		//	cout << "You choose report about transaction.\n";
+		//	cout << "Enter first date: \nDay,month.year: ";
+		//	cin >> day >> month >> year;
+		//		if (isUnsignedNumber(day) && isUnsignedNumber(month) && isUnsignedNumber(year))// Работает проверка на ввод только чисел по модулю
+		//		{
+		//	
+		//		}else 
+		//		{ 
+		//		cout << "\nWrong date! Try again!\n";
+		//		break; 
+		//		}
+		//	date first_date(day, month, year);
+		//	cout << "Enter last date: \nDay,month.year: ";
+		//	cin >> day >> month >> year;
+		//		if(isUnsignedNumber(day)&& isUnsignedNumber(month)&& isUnsignedNumber(year))
+		//		{ 
+		//			if (date_cheker(day, month, year))
+		//			{
+		//			}
+		//			else { cout << "\nWrong date! Try again!\n"; break; }
+		//			date last_date(day, month, year);
+		//			vector<transaction> resList = client1.get_tr_by_period(first_date, last_date);
 
-					for (const auto& res : resList)
-					{
-						cout << res;
-					}
-				}
-				else 
-				{ cout << "\nWrong date! Try again!\n"; break; }
-			
-		break;
-		}
+		//			for (const auto& res : resList)
+		//			{
+		//				cout << res;
+		//			}
+		//		}
+		//		else 
+		//		{ cout << "\nWrong date! Try again!\n"; break; }
+		//	
+		//break;
+		//}
 		default:
 		{
 			cout << "Unknown command :(";
