@@ -235,7 +235,7 @@ ostream& operator<<(ostream& out,const account& name)
 	out << "Data of end credit or deposit: " << name.end_date << endl;
 	return out;
 }
-vector<transaction>account::get_tr()
+vector<transaction>&account::get_tr()
 {
 	return all_transaction;
 }

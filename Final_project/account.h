@@ -41,7 +41,7 @@ public:
 	friend ostream& operator<<(ostream& out,const account& name); //перевантаження для об'єкту
 
 	//friend ostream& operator<<(ostream& out, cards_type& type); //перевантаження для переліку(enum) типів карт
-	vector<transaction> get_tr();
+	vector<transaction>&get_tr();
 
 	int get_id()const;
 	void set_id(int id);
