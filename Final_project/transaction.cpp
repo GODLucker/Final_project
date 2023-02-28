@@ -33,12 +33,12 @@ string transaction::show_cards_type(const transaction_type type) const
 	if (type == spending)
 	{
 		return "spending";
-	}
+	}else
 		return "replenishment";
 	
 	
 }
 ostream& operator<<(ostream& out, const transaction& tr)
 {
-	return out << "\nMoney: " << tr.money << " type: " << tr.show_cards_type(tr.type) << " \nData_tr: " << tr.date_tr << endl;
+	return out << "\nMoney: " << tr.money << " type transaction: " << tr.show_cards_type(tr.type) << " \nData of transaction: " << tr.date_tr;
 }

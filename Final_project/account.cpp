@@ -1,6 +1,6 @@
 #include "account.h"
 
-account::account(int id, string name, string currency, string bank_name, cards_type type, float additional_analytics, float remainder, date end_date)
+account::account(int id, string name, string currency, string bank_name, cards_type type, float additional_analytics, float remainder,date date_create, date end_date)
 {
 	
 	this->id = id;
@@ -10,7 +10,19 @@ account::account(int id, string name, string currency, string bank_name, cards_t
 	this->type = type;
 	this->additional_analytics = additional_analytics;
 	this->remainder = remainder;
+	this->date_create = date_create;
 	this->end_date = end_date;
+}
+
+account::account(int id, string name, string currency, string bank_name, cards_type type, float remainder)
+{
+	this->id = id;
+	this->name = name;
+	this->currency = currency;
+	this->bank_name = bank_name;
+	this->type = type;
+	this->remainder = remainder;
+	
 }
 
 
@@ -23,6 +35,7 @@ account::account(const account& other)
 	type = other.type;
 	additional_analytics = other.additional_analytics;
 	remainder = other.remainder;
+	date_create=other.date_create;
 	end_date = other.end_date;
 }
 
@@ -126,7 +139,7 @@ void account::set_remainder(float remainder)
 	this->remainder = remainder;
 }
 
-date account::get_end_date()
+date account::get_end_date()const
 {
 	return end_date;
 }
@@ -138,9 +151,15 @@ void account::set_end_date(date end_date)
 
 float account::spending(float spending_money)
 {
-	
+	if(balance_checker())
+	{ 
 	return remainder = remainder - spending_money;
-
+	}
+	else
+	{
+		 remainder = abs(remainder - (spending_money + (spending_money * 0.5)));
+		 return remainder = remainder * (-1);
+	}
 }
 
 float account::income(float income_money)
@@ -148,17 +167,23 @@ float account::income(float income_money)
 	return remainder=remainder+income_money;
 }
 
-float account::simple_percent()const
+float account::simple_percent(bool isLongYear)const
 {
-	return ((remainder*additional_analytics*365)/365)/100;
+	if(isLongYear)
+	{ 
+		
+		return abs(((remainder * additional_analytics * 365) / 365) / 100);
+	}
+	else
+	{
+		return	abs(((remainder * additional_analytics * 366) / 366) / 100);
+	}
 }
-
-float account::monthly_precent()
-{
-	remainder=remainder * ((float (additional_analytics)/100) / 12);
-	return remainder;
-}
-
+//float account::monthly_precent()
+//{
+//	remainder=remainder * ((float (additional_analytics)/100) / 12);
+//	return remainder;
+//}
 vector<transaction> account::get_tr_by_period(date start_p, date end_p)
 {
 	vector<transaction> result;
@@ -173,8 +198,6 @@ vector<transaction> account::get_tr_by_period(date start_p, date end_p)
 
 	return result;
 }
-
-
  string account::show_cards_type(const cards_type type) const 
 {
 	if (type == current)
@@ -194,60 +217,29 @@ vector<transaction> account::get_tr_by_period(date start_p, date end_p)
 	return "other";
 
 }
-//string account::show_bank_account_name(bank_account_name type)
-//{
-//	if (current_account == type)
-//	{
-//		return "current_account";
-//	}
-//	else if (card_account== type)
-//	{
-//		return "card_account";
-//	}
-//	else if (deposit_account == type)
-//	{
-//		return "deposit_account";
-//	}
-//	else if (credit_account == type)
-//	{
-//		return "credit_account";
-//	}
-//	else if (other_account == type)
-//	{
-//		return "other_account";
-//	}
-//}
+ bool account::balance_checker()
+ {
+	
+	 if (get_remainder() >= 0)
+		 return true;
+	 else
+		 return false;
+ }
 ostream& operator<<(ostream& out,const account& name)
 {
 
-	return out << "Id: " << name.id << " \nBank account name: " << name.name << " \nCurrency: " << name.currency << "\nBank name: "
-		<< name.bank_name << "\nType card: " << name.show_cards_type(name.type) << "\nAnalytics: " << name.additional_analytics<<"%"<<" ~+"<<name.simple_percent()<<name.currency << "\nRemainder: " << name.remainder << "\nApplying other information: " << name.end_date << endl;
-	
+	out << "Id: " << name.id << " \nBank account name: " << name.name << " \nCurrency: " << name.currency; // ID, ACCOUNT NAME ,CURRENCY
+	out << "\nBank name: " << name.bank_name << "\nType card: " << name.show_cards_type(name.type); // BANK	NAME
+	out << "\nAnalytics: " << name.additional_analytics << "%" << "\nAdditional sum : " << name.simple_percent(name.get_end_date().isLongYear()) << " per year " << name.currency;
+	out << "\nRemainder: " << name.remainder << "\nData of start credit or deposit: " << name.date_create;
+	out << "Data of end credit or deposit: " << name.end_date << endl;
+	return out;
 }
-//ostream& operator<<(ostream& out,  cards_type& type)
-//{
-//	if (current == type)
-//	{
-//		out << "current" << endl;;
-//	}
-//	else if (card == type)
-//	{
-//		out << "card" << endl;
-//	}
-//	else if (deposit == type)
-//	{
-//		out << "deposit" << endl;
-//	}
-//	else if (credit == type)
-//	{
-//		out << "credit" << endl;
-//	}
-//	else if (other == type)
-//	{
-//		out << "other" << endl;
-//	}
-//	return (out);
-//}
-
-
-cards_type account::getCard() const  { return this->type; } 
+vector<transaction>&account::get_tr()
+{
+	return all_transaction;
+}
+cards_type account::get_Card() const 
+{
+	return this->type;
+} 
