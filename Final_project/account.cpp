@@ -242,4 +242,4 @@ vector<transaction>&account::get_tr()
 cards_type account::get_Card() const 
 {
 	return this->type;
-} 
+}  

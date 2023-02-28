@@ -42,3 +42,4 @@ ostream& operator<<(ostream& out, const transaction& tr)
 {
 	return out << "\nMoney: " << tr.money << " type transaction: " << tr.show_cards_type(tr.type) << " \nData of transaction: " << tr.date_tr;
 }
+ 
