@@ -21,20 +21,21 @@ int main()
 {
 	int id = 1;
 	int menu;
-	std::time_t t = std::time(NULL);
+	
+	std::time_t t = std::time(NULL);//Зробили відображення для реальної дати(при створенні аккаунта)
 	std::tm tm = *std::localtime(&t);
 	date date_create(tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 	std::vector<account> accountList;
-	//FOR TEST 
-	//date credit_end(1, 4, 2021);
-	//date deposit_end;
-	//account client1(0, "credit account", "UAH", "Monobank", credit, 16, -3000,date_create, credit_end);//test
-	//account client2(2, "deposit account", "UAH", "Monobank", deposit, 16, 6000, date_create,credit_end);//test
-	//
+	/*FOR TEST
+	date credit_end(1, 4, 2021);
+	date deposit_end;
+	account client1(0, "credit account", "UAH", "Monobank", credit, 16, -3000,date_create, credit_end);//test
+	account client2(2, "deposit account", "UAH", "Monobank", deposit, 16, 6000, date_create,credit_end);//test
+	
 
-	//accountList.push_back(client1);
-	//accountList.push_back(client2);
-
+	accountList.push_back(client1);
+	accountList.push_back(client2);
+	*/
 	
 	while (!_kbhit())
 	{
@@ -385,16 +386,16 @@ bool date_checker(int day, int month, int year) {
 
 
 bool isUnsignedNumber(const std::string& str) {
-	// Проверяем, что введенная строка содержит только цифры и точки
+	// Перевірити, що введений рядок містить лише цифри та точки
 	if (str.find_first_not_of("0123456789.") == std::string::npos) {
 		try {
-			// Пробуем преобразовать строку в число типа int
+			// Спробуємо перетворити рядок на тип int
 			int intNumber = std::stoi(str);
 			return true;
 		}
 		catch (std::invalid_argument&) {
 			try {
-				// Если преобразование в int не удалось, пробуем преобразовать строку в число типа float
+				// Якщо перетворення в int не вдалося, пробуємо перетворити рядок на тип float
 				float floatNumber = std::stof(str);
 				return true;
 			}
