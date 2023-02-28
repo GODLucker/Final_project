@@ -1,5 +1,5 @@
 ﻿// Final_project.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+//COPYRIGHT
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include<ctime>
