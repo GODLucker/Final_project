@@ -39,7 +39,7 @@ public:
 	account& operator=(const account& other);
 
 	friend ostream& operator<<(ostream& out,const account& name); //перевантаження для об'єкту
-
+	std::ostream& print_short(std::ostream& out) const;
 	//friend ostream& operator<<(ostream& out, cards_type& type); //перевантаження для переліку(enum) типів карт
 	vector<transaction>&get_tr();
 

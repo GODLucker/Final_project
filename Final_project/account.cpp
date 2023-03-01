@@ -230,9 +230,16 @@ ostream& operator<<(ostream& out,const account& name)
 
 	out << "Id: " << name.id << " \nBank account name: " << name.name << " \nCurrency: " << name.currency; // ID, ACCOUNT NAME ,CURRENCY
 	out << "\nBank name: " << name.bank_name << "\nType card: " << name.show_cards_type(name.type); // BANK	NAME
-	out << "\nAnalytics: " << name.additional_analytics << "%" << "\nAdditional sum : " << name.simple_percent(name.get_end_date().isLongYear()) << " per year " << name.currency;
+	out << "\nAnalytics: " << name.additional_analytics << "%" << "\nAdditional sum : " << name.simple_percent(name.get_end_date().isLongYear()) << " " << name.currency;
 	out << "\nRemainder: " << name.remainder << "\nData of start credit or deposit: " << name.date_create;
 	out << "Data of end credit or deposit: " << name.end_date << endl;
+	return out;
+}
+std::ostream& account::print_short(std::ostream& out) const
+{
+	out << "Id: " << id << " \nBank account name: " << name << " \nCurrency: " << currency; // ID, ACCOUNT NAME ,CURRENCY
+	out << "\nBank name: " << bank_name << "\nType card: " << show_cards_type(type); // BANK	NAME
+	out << "\nRemainder: " << remainder << endl;
 	return out;
 }
 vector<transaction>&account::get_tr()
