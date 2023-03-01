@@ -40,7 +40,7 @@ public:
 
 	friend ostream& operator<<(ostream& out,const account& name); //перевантаження для об'єкту
 	std::ostream& print_short(std::ostream& out) const;
-	//friend ostream& operator<<(ostream& out, cards_type& type); //перевантаження для переліку(enum) типів карт
+	
 	vector<transaction>&get_tr();
 
 	int get_id()const;
@@ -72,7 +72,7 @@ public:
 	void set_end_date(date end_date);
 
 	 string show_cards_type(const cards_type type) const;
-	 /*string show_bank_account_name(string type);*/
+	
 	 
 	float spending(float spending_money);
 	float income(float income_money);
@@ -82,7 +82,7 @@ public:
 
 	bool balance_checker();
 	vector<transaction> get_tr_by_period(date start_p, date end_p);
-	//float deposit_interest( date& start_date,  date& end_date) const;
+	
 };
 
  
