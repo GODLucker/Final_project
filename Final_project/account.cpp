@@ -1,6 +1,6 @@
 #include "account.h"
-
-account::account(int id, string name, string currency, string bank_name, cards_type type, float additional_analytics, float remainder,date date_create, date end_date)
+#include"date.h"
+account::account(int id, string name, string currency, string bank_name, cards_type type, float additional_analytics,long float remainder,date date_create, date end_date)
 {
 	
 	this->id = id;
@@ -138,6 +138,10 @@ void account::set_remainder(float remainder)
 {
 	this->remainder = remainder;
 }
+date account::get_start_date()const
+{
+	return date_create;
+}
 
 date account::get_end_date()const
 {
@@ -179,6 +183,23 @@ float account::simple_percent(bool isLongYear)const
 		return	abs(((remainder * additional_analytics * 366) / 366) / 100);
 	}
 }
+
+float account::deposit_interest(const date& start_date, const date& end_date) const
+{
+	int months_in_year = 12;
+	int total_months = (end_date.get_year() - start_date.get_year()) * months_in_year + (end_date.get_month() - start_date.get_month());
+	if (end_date.get_day() < start_date.get_day())
+	{
+		total_months--;
+	}
+	float interest_rate = additional_analytics / 100;
+	float interest = remainder * interest_rate * total_months / months_in_year;
+	return interest;
+}
+
+
+
+
 //float account::monthly_precent()
 //{
 //	remainder=remainder * ((float (additional_analytics)/100) / 12);
@@ -230,7 +251,7 @@ ostream& operator<<(ostream& out,const account& name)
 
 	out << "Id: " << name.id << " \nBank account name: " << name.name << " \nCurrency: " << name.currency; // ID, ACCOUNT NAME ,CURRENCY
 	out << "\nBank name: " << name.bank_name << "\nType card: " << name.show_cards_type(name.type); // BANK	NAME
-	out << "\nAnalytics: " << name.additional_analytics << "%" << "\nAdditional sum : " << name.simple_percent(name.get_end_date().isLongYear()) << " " << name.currency;
+	out << "\nAnalytics: " << name.additional_analytics << "%" << "\nAdditional sum : " << name.deposit_interest(name.get_start_date(),name.get_end_date()) << " " << name.currency;
 	out << "\nRemainder: " << name.remainder << "\nData of start credit or deposit: " << name.date_create;
 	out << "Data of end credit or deposit: " << name.end_date << endl;
 	return out;

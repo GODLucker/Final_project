@@ -25,14 +25,14 @@ private:
 	string bank_name; //назва банку
 	cards_type type; //тип картки
 	float additional_analytics;//відсоток, який нараховується на залишок
-	float remainder;//залишок
+	long float remainder;//залишок
 	date date_create;
 	date end_date;// має бути прогнозована дата закінчення депозита або кредита.
 	vector<transaction> all_transaction; //усі транзакції за період
 
 	
 public:
-	account(int id, string name, string currency, string bank_name, cards_type type, float additional_analytics, float remainder, date date_create , date end_date);
+	account(int id, string name, string currency, string bank_name, cards_type type, float additional_analytics,long float remainder, date date_create , date end_date);
 	account(int id, string name, string currency, string bank_name, cards_type type,  float remainder);
 	account(const account& other);
 	account(const account&& other);
@@ -66,6 +66,8 @@ public:
 	float get_remainder()const;
 	void set_remainder(float remainder);
 
+	date get_start_date()const;
+	
 	date get_end_date()const;
 	void set_end_date(date end_date);
 
@@ -76,11 +78,11 @@ public:
 	float income(float income_money);
 	
 	float simple_percent(bool isLongYear)const;
-	
+	float deposit_interest(const date& start_date, const date& end_date) const;
 
 	bool balance_checker();
 	vector<transaction> get_tr_by_period(date start_p, date end_p);
-
+	//float deposit_interest( date& start_date,  date& end_date) const;
 };
 
  

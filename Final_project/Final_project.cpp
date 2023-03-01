@@ -1,24 +1,29 @@
-﻿// Final_project.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//COPYRIGHT VLAD
+﻿
+//Copyright by Vlad Motyshen 2023
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
-#include<ctime>
-#include "account.h"
-#include <iomanip>
-#include<chrono>
-#include <ctime>
-#include<conio.h>
 #include <string>
 #include <sstream>
+#include<chrono>
+#include<ctime>
+#include <ctime>
+#include <iomanip>
+#include<conio.h>
+
+
 #include<Windows.h>
-bool isUnsignedNumber(const std::string& str);
-bool isUnsignedNumber(int number);
-bool is_valid_date(int day, int month, int year, const date& date_create);//прототип
+
+#include "account.h" //Наш головний класс
+
+bool isUnsignedNumber(const std::string& str);//прототип на перевірку тільки чисел без знаку
+bool isUnsignedNumber(int number);//прототип на перевірку тільки чисел без знаку
+bool date_checker(int day, int month, int year);//прототип для перевірки на введеня дати(вискосність та інше)
+bool is_valid_date(int day, int month, int year, const date& date_create);//прототип для перевірки введеної дати на меншість чи рівність дати створення рахунку
 int main()
 {
 	int id = 1;
 	int menu;
-	auto now = std::chrono::system_clock::now();
+	auto now = std::chrono::system_clock::now(); //Отримуємо поточний час
 	auto now_time_t = std::chrono::system_clock::to_time_t(now);
 	std::tm tm = *std::localtime(&now_time_t);
 	date date_create(tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
@@ -87,9 +92,9 @@ int main()
 				cout << "Enter of date deposit ending.\n";
 				cout << "Enter data: \nDay: ,Month: ,Year: \n";
 				cin >> day >> month >> year;
-				if(is_valid_date(day,month,year, date_create))// перевірка на коректність дати 
+				if(is_valid_date(day,month,year, date_create))// перевірка на коректність дати та перевірка кінцевої дати(не може бути менша чи дорівнювати дати створення карти
 				{ 
-				date deposit_end(day, month, year);
+				deposit_end= date(day, month, year);
 				}
 				else { cout << "\nWrong date! Try again!\n"; break; }
 				cout << "Enter first ammount to deposit on your new account\n";
@@ -149,17 +154,25 @@ int main()
 		}
 		case 2:
 		{
-			cout << "You choose avalible card info: \n";
+			cout << "You choose available card info:\n";
+
+			if (accountList.empty()) {
+				cout << "No accounts found.\n";
+				break;
+			}
 
 			for (const auto& account : accountList) {
 				cout << "\nCard ID:" << account.get_id() << " " << account.show_cards_type(account.get_Card()) << endl;
 			}
 			break;
-
 		}
 		case 3:
 		{
 			cout << "You choose show info from your avalible cards: \n";
+			if (accountList.empty()) {
+				cout << "No accounts found.\n";
+				break;
+			}
 			for (const auto& accountlist : accountList)
 			{
 				if (accountlist.get_Card() == 0 || accountlist.get_Card() == 1 || accountlist.get_Card() == 4)
@@ -170,9 +183,15 @@ int main()
 			break;
 		}
 		case 4://Spending money
-		{
+		{ 
+			if (accountList.empty()) {
+				cout << "No accounts found.\n";
+				break;
+			}
+		
 			int id, day, month, year;
 			float spend_money;
+			date date_tr;
 			transaction_type::spending;
 			cout << "Enter from what account minus spending: ";
 			cout << "Your avalible account: \n";
@@ -199,9 +218,9 @@ int main()
 					}
 					cout << "Enter data of spending: \nDay: ,Month: ,Year: \n";
 					cin >> day >> month >> year;
-					if (is_valid_date(day, month, year, date_create))// перевірка на коректність дати 
+					if (date_checker(day, month, year))// перевірка на коректність дати 
 					{
-						date date_tr(day, month, year);
+					date date_tr(day, month, year);
 					transaction tr(spend_money, spending, date_tr);
 					accountList[i].get_tr().push_back(tr);
 					}
@@ -220,11 +239,16 @@ int main()
 		}
 		case 5:
 		{
+			if (accountList.empty()) {
+				cout << "No accounts found.\n";
+				break;
+			}
 			cout << "You entered save replenishment!\n";
 			int id, day, month, year;
 			float replenishment_money;
 			transaction_type::replenishment;
 			cout << "Enter from what account plus replenishment. \n";
+			cout << "Enter ID: \n";
 			cout << "Your avalible account: \n";
 			for (const auto& account : accountList)
 			{
@@ -240,7 +264,7 @@ int main()
 					accountList[i].income(replenishment_money);
 					cout << "Enter data of spending: \nDay: ,Month: ,Year: \n";
 					cin >> day >> month >> year;
-					if (is_valid_date(day, month, year, date_create))// перевірка на коректність дати 
+					if (date_checker(day, month, year))// перевірка на коректність дати 
 					{
 						date date_tr(day, month, year);
 						transaction tr(replenishment_money, replenishment, date_tr);
@@ -263,30 +287,41 @@ int main()
 		}
 		case 6:
 		{
+			if (accountList.empty()) {
+				cout << "No accounts found.\n";
+				break;
+			}
 			int  day, month, year;
 			date first_date, last_date;
 			cout << "You choose report about transaction.\n";
 			cout << "Enter first date: \nDay,month,year: ";
 			cin >> day >> month >> year;
-			if (is_valid_date(day, month, year, date_create))// перевірка на коректність дати 
+			if (date_checker(day, month, year))// перевірка на коректність дати 
 			{
-				date first_date(day, month, year);
+				 first_date=date(day, month, year);
 				
 				cout << "Enter last date: \nDay,month.year: ";
 			
 				cin >> day >> month >> year;
-				if (is_valid_date(day, month, year, date_create))// перевірка на коректність дати 
+				if (date_checker(day, month, year))// перевірка на коректність дати 
 				{
-					date last_date(day, month, year);
-					for (auto i = 0; i < accountList.size(); i++)
-					{
-					vector<transaction> resList = accountList[i].get_tr_by_period(first_date, last_date);
+					 last_date=date(day, month, year);
+					 if (last_date >= first_date)
+					 {
+						 for (auto i = 0; i < accountList.size(); i++)
+						 {
+							 vector<transaction> resList = accountList[i].get_tr_by_period(first_date, last_date);
 
-					for (const auto& res : resList)
-					{
-						cout << res;
-					}
-					}
+							 for (const auto& res : resList)
+							 {
+								 cout << res;
+							 }
+						 }
+					 }
+					 else
+					 {
+						 cout << "\nWrong date! Try again!\n"; break;
+					 }
 				}else
 				{ 
 					cout << "\nWrong date! Try again!\n"; break;
@@ -340,7 +375,7 @@ int main()
 		//}
 		default:
 		{
-			cout << "Unknown command :(";
+			cout << "\nUnknown command!\n";
 			break;
 		}
 		}
@@ -348,8 +383,9 @@ int main()
 	}
 	return 0;
 }
-bool is_valid_date(int day, int month, int year, const date& date_create) {
-	// Проверяем на корректность введенную дату
+bool is_valid_date(int day, int month, int year, const date& date_create) // Перевіряємо на коректність введену дату
+{
+	
 	if (year < 1970) return false;
 	if (month < 1 || month > 12) return false;
 
@@ -368,14 +404,53 @@ bool is_valid_date(int day, int month, int year, const date& date_create) {
 		if (day < 1 || day > 31) return false;
 	}
 
-	// Проверяем, что введенная дата не меньше даты создания аккаунта
+	// Перевіряємо, що введена дата не менше дати створення облікового запису
 	auto deposit_end = date(day, month, year);
 	return deposit_end >= date_create;
 }
+bool date_checker(int day, int month, int year)
+{
+	if (year >= 1970) {}
+
+	else return false;
+
+	if (month >= 1 && month <= 12) {}
+	else return false;
+
+	if (month == 2)
+	{
+		if (year % 4 == 0)
+		{
+			if (day >= 1 && day <= 29) day = day;
+			else return false;
+		}
+		else
+		{
+			if (day >= 1 && day <= 28) day = day;
+			else return false;
+		}
+	}
+	else if (month == 4 || month == 6 || month == 9 || month == 11)
+	{
+		if (day >= 1 && day <= 30) day = day;
+		else return false;
+	}
+	else
+	{
+		if (day >= 1 && day <= 31)
+		{
+			day = day;
+		}
+		else return false;
+	}
+
+	return true;
+};
+
 bool isUnsignedNumber(const std::string& str) {
-	// Проверяем, что введенная строка содержит только цифры
+	// Перевіряємо, що введений рядок містить лише цифри
 	if (str.find_first_not_of("0123456789") == std::string::npos) {
-		// Преобразуем строку в беззнаковое число
+		// Перетворимо рядок на беззнакове число
 		std::stringstream ss(str);
 		int number;
 		ss >> number;
